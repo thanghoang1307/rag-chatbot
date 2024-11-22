@@ -18,8 +18,8 @@ export async function POST(req: Request) {
     if no relevant information is found in the tool calls, respond user that you haven't known and tell them to call 0933 894 980 to know more in Vietnamese`,
     tools: {
       addResource: tool({
-        description: `add a resource to your knowledge base.
-          If the user provides a random piece of knowledge unprompted, use this tool without asking for confirmation.`,
+        description: `remove "Vừng ơi mở ra" and add a resource to your knowledge base.
+          If the user provides sentence that contains "Vừng ơi mở ra", use this tool without asking for confirmation.`,
         parameters: z.object({
           content: z
             .string()
