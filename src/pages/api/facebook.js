@@ -31,7 +31,7 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    res.status(200).json({message: 'success'});
+    return { success: true, message: 'ok' };
   } catch (error) {
     return { success: false, message: error.message };
   }
