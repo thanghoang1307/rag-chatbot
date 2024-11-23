@@ -35,9 +35,9 @@ const handlerGetMethod = (req, res) => {
 }
 
 const handlerPostMethod = async (req, res) => {
+  console.log(req);
   try {
     const message = await req.body.entry[0].message.text;
-    console.log(message);
     const result = generateText({
       model: openai('gpt-4o'),
       messages,
