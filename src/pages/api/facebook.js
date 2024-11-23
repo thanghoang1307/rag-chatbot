@@ -35,22 +35,11 @@ const handlerGetMethod = (req, res) => {
 }
 
 const handlerPostMethod = async (req, res) => {
-    const body = req.body;
-    if (body.object === "page") {
-      try {
-        const message = await req.body.entry[0].messaging[0].message.text;
-        console.log({message: message});
-        return {success: true, message: 'ok'};
-      } catch(e) {
-        return { success: false, message: e.message };
-      }
-    } else {
-      return { success: false, message: 'not page' };
-    }
-    
-
   try {
-    const message = await req.body.entry[0].messaging.text;
+    const message = await req.body.entry[0].messaging[0].message.text;
+    const pageId = await req.body.entry[0].id;
+    const recipientId = await req.body.entry[0].messaging[0].sender.id;
+
     const result = generateText({
       model: openai('gpt-4o'),
       messages,
@@ -77,9 +66,25 @@ const handlerPostMethod = async (req, res) => {
         }),
       },
     });
-    return {success: true, message: result.text};
+    const data = await sendMessage(pageId, recipientId, result.text);
+    return {success: true, message: data};
   } catch (error) {
     return { success: false, message: error.message };
+  }
+}
+
+async function sendMessage(pageId, recipientId, message) {
+  try {
+    const config = JSON.parse(process.env.NEXT_PUBLIC_CONFIG || {});
+    const page = config.data.find((page) => {
+      return page.id == pageId;
+    });
+    const url = `https://graph.facebook.com/v21.0/${pageId}?access_token=${page.access_token}`;
+    const response = await axios.post(url, null, { recipient: {id: recipientId}, message: {text: message}, messaging_type: 'RESPONSE', timeout: 10000 });
+    return response;
+  } catch (error) {
+    console.error("Lỗi khi gọi API:", error);
+    throw error;
   }
 }
 
