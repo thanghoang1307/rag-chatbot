@@ -59,7 +59,7 @@ const handlerPostMethod = async (req, res) => {
     console.log(messages);
 
     const result = generateText({
-      model: openai('gpt-4o-mini'),
+      model: openai('gpt-4o'),
       messages,
       system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
       Only respond to questions using information from tool calls.
@@ -87,7 +87,7 @@ const handlerPostMethod = async (req, res) => {
     const data = await sendMessage(pageId, customerId, result.text);
     return {success: true, message: data};
   } catch (error) {
-    console.error("Lỗi:", error.message);
+    console.error("Lỗi:", error);
     return { success: false, message: error.message };
   }
 }
@@ -99,7 +99,7 @@ async function sendMessage(pageId, recipientId, message) {
     const response = await axios.post(url, null, { timeout: 10000 });
     return response;
   } catch (error) {
-    console.error("Lỗi khi gọi API:", error);
+    console.error("Lỗi khi send Message:", error);
     throw error;
   }
 }
@@ -111,6 +111,7 @@ async function getConversation(pageId, customerId) {
     const response = await axios.get(url, null, {timeout: 10000 });
     return response;
   } catch (error) {
+    console.error("Lỗi khi get Conversation:", error);
     throw error;
   }
 }
