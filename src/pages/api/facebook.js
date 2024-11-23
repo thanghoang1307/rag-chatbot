@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { createResource } from '@/lib/actions/resources';
 import { openai } from '@ai-sdk/openai';
-import { generateText, streamText, tool } from 'ai';
+import { generateText, streamText, tool, convertToCoreMessages } from 'ai';
 import { z } from 'zod';
 import { findRelevantContent } from '@/lib/ai/embedding';
 
@@ -36,15 +36,31 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    let messages = [];
     const prompt = await req.body.entry[0].messaging[0].message.text;
     // messages.push(message);
     const pageId = await req.body.entry[0].id;
-    const recipientId = await req.body.entry[0].messaging[0].sender.id;
+    const customerId = await req.body.entry[0].messaging[0].sender.id;
+    const conversations = await getConversation(pageId, customerId);
+    const messages = conversations.data[0].messages.data;
+    messages.map(msg => {
+      let role;
+      
+      if (msg.from.id == customerId) {
+        role = 'user';
+      } else {
+        role = 'assistant';
+      }
+
+      const content = msg.message;
+
+      return {role, content};
+    });
+
+    console.log(messages);
 
     const result = generateText({
       model: openai('gpt-4o'),
-      prompt,
+      messages,
       system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
       Only respond to questions using information from tool calls.
       if no relevant information is found in the tool calls, respond user that you haven't known and tell them to call 0933 894 980 to know more in Vietnamese`,
@@ -68,7 +84,7 @@ const handlerPostMethod = async (req, res) => {
         }),
       },
     });
-    const data = await sendMessage(pageId, recipientId, result.text);
+    const data = await sendMessage(pageId, customerId, result.text);
     return {success: true, message: data};
   } catch (error) {
     console.error("Lỗi:", error.message);
@@ -78,16 +94,33 @@ const handlerPostMethod = async (req, res) => {
 
 async function sendMessage(pageId, recipientId, message) {
   try {
-    const config = JSON.parse(process.env.NEXT_PUBLIC_CONFIG || {});
-    const page = config.data.find((page) => {
-      return page.id == pageId;
-    });
-    const url = `https://graph.facebook.com/v21.0/${pageId}?access_token=${page.access_token}`;
+    const accessToken = getPageAccessToken(pageId);
+    const url = `https://graph.facebook.com/v21.0/${pageId}?access_token=${accessToken}`;
     const response = await axios.post(url, null, { recipient: {id: recipientId}, message: {text: message}, messaging_type: 'RESPONSE', timeout: 10000 });
     return response;
   } catch (error) {
     console.error("Lỗi khi gọi API:", error);
     throw error;
   }
+}
+
+async function getConversation(pageId, customerId) {
+  try {
+    const accessToken = getPageAccessToken(pageId);
+    const url = `https://graph.facebook.com/v21.0/${customerId}/conversations?fields=participants,messages{message,from}?access_token=${accessToken}`;
+    const response = await axios.get(url, null, {timeout: 10000 });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+function getPageAccessToken(pageId) {
+  const config = JSON.parse(process.env.NEXT_PUBLIC_CONFIG || {});
+    const page = config.data.find((page) => {
+      return page.id == pageId;
+    });
+  
+  return page.access_token;
 }
 
