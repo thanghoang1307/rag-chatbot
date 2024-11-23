@@ -37,14 +37,14 @@ const handlerGetMethod = (req, res) => {
 const handlerPostMethod = async (req, res) => {
   try {
     let messages = [];
-    const message = await req.body.entry[0].messaging[0].message.text;
-    messages.push(message);
+    const prompt = await req.body.entry[0].messaging[0].message.text;
+    // messages.push(message);
     const pageId = await req.body.entry[0].id;
     const recipientId = await req.body.entry[0].messaging[0].sender.id;
 
     const result = generateText({
       model: openai('gpt-4o'),
-      messages,
+      prompt,
       system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
       Only respond to questions using information from tool calls.
       if no relevant information is found in the tool calls, respond user that you haven't known and tell them to call 0933 894 980 to know more in Vietnamese`,
