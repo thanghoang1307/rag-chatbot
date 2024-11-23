@@ -85,7 +85,7 @@ const handlerPostMethod = async (req, res) => {
       },
     });
 
-    const responseMsg = result.text;
+    const responseMsg = result.steps;
     console.log({result});
     console.log({responseMsg});
     let data;
