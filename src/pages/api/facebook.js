@@ -59,7 +59,7 @@ const handlerPostMethod = async (req, res) => {
     console.log(messages);
 
     const result = generateText({
-      model: openai('gpt-4o'),
+      model: openai('gpt-4o-mini'),
       messages,
       system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
       Only respond to questions using information from tool calls.
@@ -95,8 +95,8 @@ const handlerPostMethod = async (req, res) => {
 async function sendMessage(pageId, recipientId, message) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    const url = `https://graph.facebook.com/v21.0/${pageId}?access_token=${accessToken}`;
-    const response = await axios.post(url, null, { recipient: {id: recipientId}, message: {text: message}, messaging_type: 'RESPONSE', timeout: 10000 });
+    const url = `https://graph.facebook.com/v21.0/${pageId}?recipient={id:${recipientId}}&message={text:${message}}&messaging_type=RESPONSE&access_token=${accessToken}`;
+    const response = await axios.post(url, null, { timeout: 10000 });
     return response;
   } catch (error) {
     console.error("Lỗi khi gọi API:", error);
