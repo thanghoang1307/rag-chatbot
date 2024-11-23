@@ -83,8 +83,6 @@ const handlerPostMethod = async (req, res) => {
       },
     });
 
-    console.log(result);
-
     const data = await sendMessage(pageId, customerId, result.text);
     return {success: true, message: data};
   } catch (error) {
