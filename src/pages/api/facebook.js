@@ -42,7 +42,7 @@ const handlerPostMethod = async (req, res) => {
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
-    const messages = messagesFB.map(msg => {
+    let messages = messagesFB.map(msg => {
       let role;
       
       if (msg.from.id == customerId) {
@@ -54,7 +54,9 @@ const handlerPostMethod = async (req, res) => {
       const content = msg.message;
 
       return {role, content};
-    }).reverse();
+    });
+
+    messages = messages.slice(0, 5).reverse();
 
     const result = await generateText({
       model: openai('gpt-4o'),
