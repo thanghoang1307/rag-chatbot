@@ -42,7 +42,7 @@ const handlerPostMethod = async (req, res) => {
 
     const result = generateText({
       model: openai('gpt-4o'),
-      messages,
+      message,
       system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
       Only respond to questions using information from tool calls.
       if no relevant information is found in the tool calls, respond user that you haven't known and tell them to call 0933 894 980 to know more in Vietnamese`,
@@ -69,6 +69,7 @@ const handlerPostMethod = async (req, res) => {
     const data = await sendMessage(pageId, recipientId, result.text);
     return {success: true, message: data};
   } catch (error) {
+    console.error("Lỗi:", error.message);
     return { success: false, message: error.message };
   }
 }
