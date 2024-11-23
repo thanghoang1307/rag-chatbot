@@ -85,8 +85,8 @@ const handlerPostMethod = async (req, res) => {
       },
     });
 
-    console.log(result.text);
     const responseMsg = result.text;
+    console.log(result);
     let data;
     if (responseMsg) {
       data = await sendMessage(pageId, customerId, result.text);
