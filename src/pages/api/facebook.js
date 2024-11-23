@@ -38,8 +38,8 @@ const handlerPostMethod = async (req, res) => {
     const body = req.body;
     if (body.object === "page") {
       try {
-        const entry = await req.body.entry[0];
-        console.log({entry: entry});
+        const message = await req.body.entry[0].messaging[0].message.text;
+        console.log({message: message});
         return {success: true, message: 'ok'};
       } catch(e) {
         return { success: false, message: e.message };
