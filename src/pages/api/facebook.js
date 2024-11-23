@@ -57,7 +57,7 @@ const handlerPostMethod = async (req, res) => {
     });
 
     console.log(messages);
-    return {success: true, message: 'ok'};
+    // return {success: true, message: 'ok'};
 
     const result = generateText({
       model: openai('gpt-4o'),
