@@ -37,7 +37,6 @@ const handlerGetMethod = (req, res) => {
 const handlerPostMethod = async (req, res) => {
   try {
     const prompt = await req.body.entry[0].messaging[0].message.text;
-    // messages.push(message);
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
     const conversations = await getConversation(pageId, customerId);
@@ -87,7 +86,6 @@ const handlerPostMethod = async (req, res) => {
     const data = await sendMessage(pageId, customerId, result.text);
     return {success: true, message: data};
   } catch (error) {
-    console.error("Lỗi:", error);
     return { success: false, message: error.message };
   }
 }
@@ -99,7 +97,7 @@ async function sendMessage(pageId, recipientId, message) {
     const response = await axios.post(url, null, { timeout: 10000 });
     return response;
   } catch (error) {
-    console.error("Lỗi khi send Message:", error);
+    console.error("Lỗi khi send Message:", error.message);
     throw error;
   }
 }
@@ -111,7 +109,7 @@ async function getConversation(pageId, customerId) {
     const response = await axios.get(url, null, {timeout: 10000 });
     return response;
   } catch (error) {
-    console.error("Lỗi khi get Conversation:", error);
+    console.error("Lỗi khi get Conversation:", error.message);
     throw error;
   }
 }
