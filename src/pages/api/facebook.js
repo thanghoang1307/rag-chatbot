@@ -40,6 +40,8 @@ const handlerPostMethod = async (req, res) => {
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
     const conversations = await getConversation(pageId, customerId);
+    console.log(conversations.data[0]);
+    return {success: true, message: 'ok'};
     const messages = conversations.data[0].messages.data;
     
     messages.map(msg => {
