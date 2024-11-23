@@ -35,7 +35,14 @@ const handlerGetMethod = (req, res) => {
 }
 
 const handlerPostMethod = async (req, res) => {
-  console.log(req);
+  try {
+    const entry = await req.body.entry[0];
+    console.log(entry);
+    return {success: true, message: 'ok'};
+  } catch(e) {
+    return { success: false, message: e.message };
+  }
+
   try {
     const message = await req.body.entry[0].messaging.text;
     const result = generateText({
