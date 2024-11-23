@@ -105,7 +105,7 @@ async function sendMessage(pageId, recipientId, message) {
 async function getConversation(pageId, customerId) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    const url = `https://graph.facebook.com/v21.0/${customerId}/conversations?fields=participants,messages{message,from}?access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/v21.0/${customerId}/conversations?fields=participants,messages{message,from}&access_token=${accessToken}`;
     const response = await axios.get(url, null, {timeout: 10000 });
     return response;
   } catch (error) {
