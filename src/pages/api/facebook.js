@@ -94,7 +94,7 @@ const handlerPostMethod = async (req, res) => {
 async function sendMessage(pageId, recipientId, message) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:${message}}&messaging_type=RESPONSE&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
     console.log(url);
     const response = await axios.post(url, null, { timeout: 10000 });
     return response;
