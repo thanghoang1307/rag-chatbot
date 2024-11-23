@@ -82,7 +82,8 @@ const handlerPostMethod = async (req, res) => {
         }),
       },
     });
-    const data = await sendMessage(pageId, customerId, result.text[0].name);
+    console.log(result);
+    const data = await sendMessage(pageId, customerId, result.text[0]);
     return {success: true, message: data};
   } catch (error) {
     console.error("Lỗi khi xử lý:", error.message);
