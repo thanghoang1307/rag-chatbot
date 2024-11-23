@@ -39,9 +39,6 @@ const handlerPostMethod = async (req, res) => {
   try {
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
-    const accessToken = getPageAccessToken(pageId);
-    const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&message={text:'Hello'}&messaging_type=RESPONSE&access_token=${accessToken}`;
-    console.log(url);
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
@@ -59,10 +56,7 @@ const handlerPostMethod = async (req, res) => {
       return {role, content};
     });
 
-    console.log(messages);
-    // return {success: true, message: 'ok'};
-
-    const result = generateText({
+    const result = await generateText({
       model: openai('gpt-4o'),
       messages,
       system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
@@ -88,6 +82,8 @@ const handlerPostMethod = async (req, res) => {
         }),
       },
     });
+
+    console.log(result);
 
     const data = await sendMessage(pageId, customerId, result.text);
     return {success: true, message: data};
