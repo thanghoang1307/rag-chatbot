@@ -39,6 +39,9 @@ const handlerPostMethod = async (req, res) => {
   try {
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
+    const accessToken = getPageAccessToken(pageId);
+    const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&message={text:'Hello'}&messaging_type=RESPONSE&access_token=${accessToken}`;
+    console.log(url);
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
