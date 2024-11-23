@@ -35,13 +35,19 @@ const handlerGetMethod = (req, res) => {
 }
 
 const handlerPostMethod = async (req, res) => {
-  try {
-    const entry = await req.body.entry[0];
-    console.log(entry);
-    return {success: true, message: 'ok'};
-  } catch(e) {
-    return { success: false, message: e.message };
-  }
+    const body = req.body;
+    if (body.object === "page") {
+      try {
+        const entry = await req.body.entry[0];
+        console.log({entry: entry});
+        return {success: true, message: 'ok'};
+      } catch(e) {
+        return { success: false, message: e.message };
+      }
+    } else {
+      return { success: false, message: 'not page' };
+    }
+    
 
   try {
     const message = await req.body.entry[0].messaging.text;
