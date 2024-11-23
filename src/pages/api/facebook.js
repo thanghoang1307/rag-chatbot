@@ -40,9 +40,7 @@ const handlerPostMethod = async (req, res) => {
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
     const conversations = await getConversation(pageId, customerId);
-    console.log({conversation: conversations.data});
-    return {success: true, message: 'ok'};
-    const messages = conversations.messages.data;
+    const messages = conversations.data[0].messages.data;
     
     messages.map(msg => {
       let role;
@@ -112,8 +110,7 @@ async function getConversation(pageId, customerId) {
     const accessToken = getPageAccessToken(pageId);
     const url = `https://graph.facebook.com/v21.0/${customerId}/conversations?fields=participants,messages{message,from}&access_token=${accessToken}`;
     const response = await axios.get(url, null, {timeout: 10000 });
-    console.log(response.data);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Lỗi khi get Conversation:", error.message);
     throw error;
