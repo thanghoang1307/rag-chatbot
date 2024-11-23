@@ -36,7 +36,9 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    const messages = await req.body.entry[0].messaging[0].message.text;
+    let messages = [];
+    const message = await req.body.entry[0].messaging[0].message.text;
+    messages.push(message);
     const pageId = await req.body.entry[0].id;
     const recipientId = await req.body.entry[0].messaging[0].sender.id;
 
