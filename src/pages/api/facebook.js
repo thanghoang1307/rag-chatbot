@@ -74,7 +74,7 @@ const handlerPostMethod = async (req, res) => {
           execute: async ({ content }) => createResource({ content }),
         }),
         getInformation: tool({
-          description: `Hãy lấy thông tin từ kiến thức của bạn để trả lời câu hỏi. Nếu như trong lần trả lời này bạn không còn thông tin gì thêm ngoài các thông tin đã trả lời ở những lần trước đó thì hãy phản hồi khách hàng là bạn đã trả lời tất cả các thông tin bạn biết. Nếu khách hàng muốn tìm hiểu thêm thì gọi cho Thắng đẹp trai, số điện thoại 0933 894 980.`,
+          description: `Hãy lấy thông tin từ kiến thức của bạn để trả lời câu hỏi. Nếu như trong lần trả lời này bạn không còn thông tin gì thêm ngoài các thông tin đã trả lời ở những lần trước đó thì hãy dừng công cụ này và phản hồi khách hàng là bạn đã trả lời tất cả các thông tin bạn biết, Nếu khách hàng muốn tìm hiểu thêm thì gọi cho Thắng đẹp trai, số điện thoại 0933 894 980.`,
           parameters: z.object({
             question: z.string().describe('the users question'),
           }),
