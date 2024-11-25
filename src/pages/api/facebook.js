@@ -37,7 +37,7 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    console.log(req.body.entry[0]);
+    console.log(req.body.entry[0].messaging[0].sender);
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
     console.log(customerId);
@@ -87,7 +87,7 @@ const handlerPostMethod = async (req, res) => {
     });
 
     console.log(text);
-    const data = sendMessage(pageId, customerId, text);
+    const data = await sendMessage(pageId, customerId, text);
     return {success: true, message: 'ok'};
   } catch (error) {
     console.error("Lỗi khi xử lý:", error.message);
