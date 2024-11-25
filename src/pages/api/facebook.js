@@ -99,8 +99,8 @@ const handlerPostMethod = async (req, res) => {
 async function sendMessage(pageId, recipientId, message) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    if(customerId == '7899343366769040') {
-      const typing_off = await axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_off&access_token=${accessToken}`);
+    if(recipientId == '7899343366769040') {
+      const typing_off = await axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_off&access_token=${accessToken}`);
     }
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
     console.log(url);
