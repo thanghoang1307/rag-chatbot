@@ -61,7 +61,7 @@ const handlerPostMethod = async (req, res) => {
     const { text } = await generateText({
       model: openai('gpt-4o'),
       messages,
-      maxSteps: 5,
+      maxSteps: 1,
       system: `Bạn là nhân viên chăm sóc khách hàng của Masterise Homes và bạn sẽ trả lời các câu hỏi của khách hàng về Công ty cũng như các dự án thuộc Công ty. Trong trường hợp khách hàng hỏi những câu hỏi không liên quan đến Công ty và dự án, hãy từ chối trả lời một cách lịch sự.`,
       tools: {
         addResource: tool({
