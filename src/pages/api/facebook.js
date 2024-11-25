@@ -37,6 +37,7 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
+    
     console.log(req.body.entry[0].messaging[0].sender);
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
@@ -87,9 +88,7 @@ const handlerPostMethod = async (req, res) => {
     });
 
     console.log({text});
-    console.log('start sending message');
     const data = await sendMessage(pageId, customerId, text);
-    console.log('finish sending message from ' + pageId + 'to ' + customerId + 'message: ' + text);
     return {success: true, message: 'ok'};
   } catch (error) {
     console.error("Lỗi khi xử lý:", error.message);
@@ -112,10 +111,12 @@ async function sendMessage(pageId, recipientId, message) {
 
 async function getConversation(pageId, customerId) {
   try {
+    const typing_on = axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
     const accessToken = getPageAccessToken(pageId);
     const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
     console.log(url);
     const response = await axios.get(url, null, {timeout: 10000 });
+    const typing_off = axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_off&access_token=${accessToken}`);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi get Conversation:", error.message);
