@@ -33,11 +33,8 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    
-    console.log(req.body.entry[0].messaging[0].sender);
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
-    console.log(customerId);
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
@@ -56,7 +53,6 @@ const handlerPostMethod = async (req, res) => {
     });
 
     messages = messages.slice(0, 5).reverse();
-    console.log(messages)
 
     const { text } = await generateText({
       model: openai('gpt-4o'),
@@ -95,11 +91,10 @@ const handlerPostMethod = async (req, res) => {
 async function sendMessage(pageId, recipientId, message) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    if(customerId == '7899343366769040') {
+    if(recipientId == '7899343366769040') {
       axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_on&access_token=${accessToken}`);
    }
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
-    console.log(url);
     const response = await axios.post(url, null, {});
     return response;
   } catch (error) {
@@ -115,7 +110,6 @@ async function getConversation(pageId, customerId) {
        axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
     }
     const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
-    console.log(url);
     const response = await axios.get(url, null, {});
     return response.data;
   } catch (error) {
