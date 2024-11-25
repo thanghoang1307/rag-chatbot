@@ -58,6 +58,8 @@ const handlerPostMethod = async (req, res) => {
 
     messages = messages.slice(0, 5).reverse();
 
+    console.log(messages);
+
     const result = await generateText({
       model: openai('gpt-4o'),
       messages,
