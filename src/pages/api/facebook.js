@@ -97,7 +97,7 @@ async function sendMessage(pageId, recipientId, message) {
     const accessToken = getPageAccessToken(pageId);
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
     console.log(url);
-    const response = await axios.post(url, null, { timeout: 10000 });
+    const response = await axios.post(url, null, {});
     return response;
   } catch (error) {
     console.error("Lỗi khi send Message:", error.message);
@@ -109,11 +109,11 @@ async function getConversation(pageId, customerId) {
   try {
     const accessToken = getPageAccessToken(pageId);
     if(customerId == '7899343366769040') {
-      await axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
+       axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
     }
     const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
     console.log(url);
-    const response = await axios.get(url, null, {timeout: 10000 });
+    const response = await axios.get(url, null, {});
     return response.data;
   } catch (error) {
     console.error("Lỗi khi get Conversation:", error.message);
