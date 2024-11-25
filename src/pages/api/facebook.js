@@ -57,6 +57,7 @@ const handlerPostMethod = async (req, res) => {
     });
 
     messages = messages.slice(0, 5).reverse();
+    console.log(messages)
 
     const { text } = await generateText({
       model: openai('gpt-4o'),
@@ -83,8 +84,8 @@ const handlerPostMethod = async (req, res) => {
       },
     });
 
-    const data = await sendMessage(pageId, customerId, text);
-
+    console.log(text);
+    const data = sendMessage(pageId, customerId, text);
     return {success: true, message: 'ok'};
   } catch (error) {
     console.error("Lỗi khi xử lý:", error.message);
