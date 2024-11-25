@@ -111,12 +111,12 @@ async function sendMessage(pageId, recipientId, message) {
 
 async function getConversation(pageId, customerId) {
   try {
-    const typing_on = axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
+    // const typing_on = axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
     const accessToken = getPageAccessToken(pageId);
     const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
     console.log(url);
     const response = await axios.get(url, null, {timeout: 10000 });
-    const typing_off = axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_off&access_token=${accessToken}`);
+    // const typing_off = axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_off&access_token=${accessToken}`);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi get Conversation:", error.message);
