@@ -15,11 +15,11 @@ export default async function handler(req, res) {
       if (result.success) {
         res.status(200).json({message: result.message});
     } else {
-        res.status(500).json({message: result.message});
+        res.status(200).json({message: result.message});
     }
     }
   } catch (error) {
-    res.status(500).json({message: error.message});
+    res.status(200).json({message: error.message});
   }
 }
 
@@ -86,8 +86,10 @@ const handlerPostMethod = async (req, res) => {
       },
     });
 
-    console.log(text);
+    console.log({text});
+    console.log('start sending message');
     const data = await sendMessage(pageId, customerId, text);
+    console.log('finish sending message from ' + pageId + 'to ' + customerId + 'message: ' + text);
     return {success: true, message: 'ok'};
   } catch (error) {
     console.error("Lỗi khi xử lý:", error.message);
