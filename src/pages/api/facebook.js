@@ -11,8 +11,8 @@ export default async function handler(req, res) {
     if (req.method == 'GET') {
       handlerGetMethod(req, res);
     } else {
+      const result = handlerPostMethod(req, res);
       res.status(200).json({message: 'done'});
-      const result = await handlerPostMethod(req, res);
     }
   } catch (error) {
     res.status(200).json({message: error.message});
@@ -95,9 +95,6 @@ const handlerPostMethod = async (req, res) => {
 async function sendMessage(pageId, recipientId, message) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    if(recipientId == '7899343366769040') {
-      axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_off&access_token=${accessToken}`);
-    }
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
     console.log(url);
     const response = await axios.post(url, null, { timeout: 10000 });
