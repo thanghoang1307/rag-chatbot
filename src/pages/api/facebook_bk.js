@@ -4,19 +4,18 @@ import { openai } from '@ai-sdk/openai';
 import { generateText, streamText, tool, convertToCoreMessages } from 'ai';
 import { z } from 'zod';
 import { findRelevantContent } from '@/lib/ai/embedding';
+import { constants } from 'buffer';
 
 export default async function handler(req, res) {
   try {
     if (req.method == 'GET') {
       handlerGetMethod(req, res);
     } else {
+      const result = await handlerPostMethod(req, res);
       res.status(200).json({message: 'done'});
-      const processedData = await processHeavyTask(req.body);
-      console.log("All tasks completed:", processedData);
     }
   } catch (error) {
     res.status(200).json({message: error.message});
-    console.error("Error during background processing:", error);
   }
 }
 
@@ -34,13 +33,14 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    const pageId = req.body.entry[0].id;
-    const customerId = req.body.entry[0].messaging[0].sender.id;
+    const pageId = await req.body.entry[0].id;
+    const customerId = await req.body.entry[0].messaging[0].sender.id;
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
     let messages = messagesFB.map(msg => {
       let role;
+      
       if (msg.from.id == customerId) {
         role = 'user';
       } else {
@@ -48,6 +48,7 @@ const handlerPostMethod = async (req, res) => {
       }
 
       const content = msg.message;
+
       return {role, content};
     });
 
