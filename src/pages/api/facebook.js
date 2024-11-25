@@ -37,8 +37,10 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
+    console.log(req.body.entry[0]);
     const pageId = await req.body.entry[0].id;
     const customerId = await req.body.entry[0].messaging[0].sender.id;
+    console.log(customerId);
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
