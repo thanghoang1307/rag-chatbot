@@ -59,7 +59,7 @@ const handlerPostMethod = async (reqBody) => {
       model: openai('gpt-4o'),
       messages,
       maxSteps: 5,
-      system: `Bạn là nhân viên chăm sóc khách hàng của Masterise Homes và bạn sẽ trả lời các câu hỏi của khách hàng về Công ty cũng như các dự án thuộc Công ty. Hãy dùng đại từ xưng hô gọi khách hàng là Anh/Chị, còn bạn dùng đại từ xưng hô là Em. Trong trường hợp khách hàng hỏi những câu hỏi không liên quan đến Công ty và dự án, hãy từ chối trả lời một cách lịch sự.`,
+      system: `Bạn là nhân viên chăm sóc khách hàng của Masterise Homes và bạn sẽ trả lời các câu hỏi của khách hàng về Công ty cũng như các dự án thuộc Công ty. Hãy dùng đại từ xưng hô gọi khách hàng là Anh/Chị, còn bạn dùng đại từ xưng hô là Em. Hãy trả lời câu hỏi của khách hàng theo mẫu: "Dạ em xin gửi Anh/Chị thông tin về [câu hỏi của khách hàng]". Trong trường hợp khách hàng hỏi những câu hỏi không liên quan đến Công ty và dự án, hãy từ chối trả lời một cách lịch sự.`,
       tools: {
         addResource: tool({
           description: `Nếu như người dùng sử dụng câu có chữ "Vừng ơi mở ra", hãy sử dụng công cụ này mà không cần xác nhận. Nhớ bỏ chữ "Vừng ơi mở ra" trước khi sử dụng công cụ.`,
@@ -71,7 +71,7 @@ const handlerPostMethod = async (reqBody) => {
           execute: async ({ content }) => createResource({ content }),
         }),
         getInformation: tool({
-          description: `Hãy lấy thông tin từ kiến thức của bạn để trả lời câu hỏi. Nếu như trong lần trả lời này bạn không còn thông tin gì thêm ngoài các thông tin đã trả lời ở những lần trước đó thì hãy dừng công cụ này và phản hồi khách hàng là bạn đã trả lời tất cả các thông tin bạn biết, Nếu khách hàng muốn tìm hiểu thêm thì gọi cho Thắng đẹp trai, số điện thoại 0933 894 980.`,
+          description: `Hãy lấy thông tin từ kiến thức của bạn để trả lời câu hỏi. Nếu như trong lần trả lời này bạn không còn thông tin gì thêm ngoài các thông tin đã trả lời ở những lần trước đó thì hãy dừng công cụ này và phản hồi khách hàng là bạn đã trả lời tất cả các thông tin bạn biết, Nếu khách hàng muốn tìm hiểu thêm thì liên hệ với số hotline của dự án.`,
           parameters: z.object({
             question: z.string().describe('the users question'),
           }),
