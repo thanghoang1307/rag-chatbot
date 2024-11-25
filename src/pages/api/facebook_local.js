@@ -37,28 +37,38 @@ const handlerGetMethod = (req, res) => {
 
 const handlerPostMethod = async (req, res) => {
   try {
-    const pageId = await req.body.entry[0].id;
-    const customerId = await req.body.entry[0].messaging[0].sender.id;
-    const conversations = await getConversation(pageId, customerId);
-    const messagesFB = conversations.data[0].messages.data;
+    // const pageId = await req.body.entry[0].id;
+    // const customerId = await req.body.entry[0].messaging[0].sender.id;
+    // const conversations = await getConversation(pageId, customerId);
+    // const messagesFB = conversations.data[0].messages.data;
     
-    let messages = messagesFB.map(msg => {
-      let role;
+    // let messages = messagesFB.map(msg => {
+    //   let role;
       
-      if (msg.from.id == customerId) {
-        role = 'user';
-      } else {
-        role = 'assistant';
-      }
+    //   if (msg.from.id == customerId) {
+    //     role = 'user';
+    //   } else {
+    //     role = 'assistant';
+    //   }
 
-      const content = msg.message;
+    //   const content = msg.message;
 
-      return {role, content};
-    });
+    //   return {role, content};
+    // });
 
-    messages = messages.slice(0, 5).reverse();
+    // messages = messages.slice(0, 5).reverse();
 
-    const { text } = await generateText({
+    // console.log(messages);
+
+    /* Test local*/
+    const messages = [
+      { role: 'user', content: 'Hãy cho tôi biết thêm thông tin về doanh nghiệp của bạn ?' },
+      { role: 'assistant', content: 'Masterise Homes®, trực thuộc tập đoàn Masterise, là nhà phát triển bất động sản quốc tế tiên phong áp dụng các chuẩn mực toàn cầu vào việc phát triển, vận hành và quản lý các sản phẩm, dịch vụ bất động sản tại Việt Nam và thế giới. Công ty cam kết không ngừng kiến tạo những công trình kiến trúc đẳng cấp và trải nghiệm xứng tầm cho khách hàng, tạo nên các giá trị vượt thời gian được công nhận trên toàn thế giới. Hiện tại, Masterise Homes có 10 dự án, trong đó có dự án Masteri Grand View.' },
+      { role: 'user', content: 'Còn gì nữa không ?' },
+      
+    ];
+    
+    const result = await generateText({
       model: openai('gpt-4o'),
       messages,
       maxSteps: 5,
@@ -83,9 +93,18 @@ const handlerPostMethod = async (req, res) => {
       },
     });
 
-    data = await sendMessage(pageId, customerId, text);
-
-    return {success: true, message: 'ok'};
+    // if (text) {
+    //   console.log('ok');
+    //   return {success: true, message: text};
+    // } else {
+      // const totalAnswer = toolResults.result.map(toolResult => toolResult.name);
+      console.log(result);
+      // const remainAnswer = totalAnswer.filter(answer => {
+      //   const assistantAnswer = messages.filter(message => message.role == 'assistant').map(message => message.content);
+      //   return !assistantAnswer.includes(answer);
+    //   })
+      return {success: true, message: result};
+    
   } catch (error) {
     console.error("Lỗi khi xử lý:", error.message);
     return { success: false, message: error.message };
@@ -125,4 +144,3 @@ function getPageAccessToken(pageId) {
   
   return page.access_token;
 }
-
