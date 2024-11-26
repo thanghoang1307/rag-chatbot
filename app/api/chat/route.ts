@@ -45,6 +45,5 @@ export async function POST(req: Request) {
     },
   });
 
-  console.log(result.usage);
   return result.toDataStreamResponse();
 }
