@@ -11,8 +11,9 @@ export default async function handler(req, res) {
       handlerGetMethod(req, res);
     } else {
       const reqBody = req.body;
+      console.log('Start');
       const processedData = await handlerPostMethod(reqBody);
-      console.log("All tasks completed:", processedData);
+      console.log("All tasks completed");
       res.status(200).json({message: 'done'});
       
     }
@@ -38,6 +39,7 @@ const handlerPostMethod = async (reqBody) => {
   try {
     const pageId = reqBody.entry[0].id;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
+    console.log("Start get conversation");
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
     
@@ -54,9 +56,9 @@ const handlerPostMethod = async (reqBody) => {
     });
 
     messages = messages.slice(0, 5).reverse();
-
+    console.log("Start generate text");
     const { text } = await generateText({
-      model: openai('gpt-4o'),
+      model: openai('gpt-3.5-turbo-0125'),
       messages,
       maxSteps: 5,
       system: `Bạn là nhân viên chăm sóc khách hàng của Masterise Homes và bạn sẽ trả lời các câu hỏi của khách hàng về Công ty cũng như các dự án thuộc Công ty. 
@@ -82,7 +84,7 @@ const handlerPostMethod = async (reqBody) => {
         }),
       },
     });
-
+    console.log("Start send Message");
     const data = await sendMessage(pageId, customerId, text);
     return {success: true, message: 'ok'};
   } catch (error) {
@@ -94,9 +96,9 @@ const handlerPostMethod = async (reqBody) => {
 async function sendMessage(pageId, recipientId, message) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    if(recipientId == '7899343366769040') {
-      axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_on&access_token=${accessToken}`);
-   }
+    // if(recipientId == '7899343366769040') {
+    //   axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_on&access_token=${accessToken}`);
+    // }
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
     const response = await axios.post(url, null, {});
     return response;
@@ -109,9 +111,9 @@ async function sendMessage(pageId, recipientId, message) {
 async function getConversation(pageId, customerId) {
   try {
     const accessToken = getPageAccessToken(pageId);
-    if(customerId == '7899343366769040') {
-       axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
-    }
+    // if(customerId == '7899343366769040') {
+    //    axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
+    // }
     const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
     const response = await axios.get(url, null, {});
     return response.data;
