@@ -58,7 +58,7 @@ const handlerPostMethod = async (reqBody) => {
     messages = messages.slice(0, 5).reverse();
     console.log("Start generate text");
     const { text } = await generateText({
-      model: openai('gpt-3.5-turbo-0125'),
+      model: openai('gpt-4o-mini'),
       messages,
       maxSteps: 5,
       system: `Bạn là nhân viên chăm sóc khách hàng của Masterise Homes và bạn sẽ trả lời các câu hỏi của khách hàng về Công ty cũng như các dự án thuộc Công ty. 
