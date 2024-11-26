@@ -56,7 +56,7 @@ const handlerPostMethod = async (reqBody) => {
       return {role, content};
     });
 
-    messages = messages.slice(0, 1).reverse();
+    messages = messages.slice(0, 5).reverse();
     console.log(messages);
     console.log("Start generate text");
     const { text, usage } = await generateText({
