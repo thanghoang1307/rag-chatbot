@@ -36,6 +36,13 @@ export async function POST(req: Request) {
         execute: async ({ question }) => findRelevantContent(question),
       }),
     },
+    onFinish: ({ usage }) => {
+      const { promptTokens, completionTokens, totalTokens } = usage;
+      // your own logic, e.g. for saving the chat history or recording usage
+      console.log('Prompt tokens:', promptTokens);
+      console.log('Completion tokens:', completionTokens);
+      console.log('Total tokens:', totalTokens);
+    },
   });
 
   console.log(result.usage);
