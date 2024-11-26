@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   console.log(messages);
 
   const result = streamText({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4o-mini'),
     messages,
     system: `You are a telesales of a Masterise Homes company. Check Masterise Homes's knowledge base before answering any questions.
     Only respond to questions using information from tool calls.
@@ -37,5 +37,7 @@ export async function POST(req: Request) {
       }),
     },
   });
+
+  console.log(result.usage);
   return result.toDataStreamResponse();
 }
