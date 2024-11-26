@@ -56,6 +56,8 @@ const handlerPostMethod = async (reqBody) => {
     });
 
     messages = messages.slice(0, 5).reverse();
+    console.log(messages[0]);
+    console.log(messages[4]);
     console.log("Start generate text");
     const { text } = await generateText({
       model: openai('gpt-4o-mini'),
