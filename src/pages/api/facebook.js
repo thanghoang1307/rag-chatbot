@@ -39,6 +39,7 @@ const handlerPostMethod = async (reqBody) => {
   try {
     const pageId = reqBody.entry[0].id;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
+    console.log(customerId);
     console.log("Start get conversation");
     const conversations = await getConversation(pageId, customerId);
     const messagesFB = conversations.data[0].messages.data;
