@@ -11,6 +11,7 @@ export default async function handler(req, res) {
       handlerGetMethod(req, res);
     } else {
       const reqBody = req.body;
+      console.log(reqBody);
       const processedData = await handlerPostMethod(reqBody);
       console.log("All tasks completed");
       res.status(200).json({message: 'done'});
