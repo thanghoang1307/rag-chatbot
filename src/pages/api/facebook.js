@@ -1,9 +1,4 @@
 import axios from 'axios';
-import { createResource } from '@/lib/actions/resources';
-import { openai } from '@ai-sdk/openai';
-import { generateText, streamText, tool, convertToCoreMessages } from 'ai';
-import { z } from 'zod';
-import { findRelevantContent } from '@/lib/ai/embedding';
 
 export default async function handler(req, res) {
   try {
@@ -39,7 +34,7 @@ const handlerPostMethod = async (reqBody) => {
     const pageId = reqBody.entry[0].id;
     const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
-
+    console.log(customerMessage);
     const AIMessage = await getAIMessage(customerId, customerMessage);
     console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
@@ -68,7 +63,8 @@ async function sendMessage(pageId, recipientId, message) {
 async function getAIMessage(customerId, customerMessage) {
   try {
     const url = `http://ec2-18-136-101-157.ap-southeast-1.compute.amazonaws.com/chat`;
-    const response = await axios.post(url, {"question": customerMessage, "thread_id": customerId}, {headers: {
+    const response = await axios.post(url, {"question": customerMessage, "thread_id": customerId}, {
+      headers: {
       'Content-Type': 'application/json'
     }});
     console.log(response);
