@@ -14,7 +14,6 @@ export default async function handler(req, res) {
       const processedData = await handlerPostMethod(reqBody);
       console.log("All tasks completed");
       res.status(200).json({message: 'done'});
-      
     }
   } catch (error) {
     res.status(200).json({message: error.message});
@@ -37,7 +36,7 @@ const handlerGetMethod = (req, res) => {
 const handlerPostMethod = async (reqBody) => {
   try {
     const pageId = reqBody.entry[0].id;
-    const customerMessage = reqBody.entry[0];
+    const customerMessage = reqBody.entry[0].message;
     console.log(customerMessage);
     const customerId = reqBody.entry[0].messaging[0].sender.id;
 
