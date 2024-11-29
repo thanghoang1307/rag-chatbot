@@ -36,11 +36,10 @@ const handlerGetMethod = (req, res) => {
 const handlerPostMethod = async (reqBody) => {
   try {
     const pageId = reqBody.entry[0].id;
-    const customerMessage = reqBody.entry[0].messaging[0].message;
-    console.log(customerMessage);
+    const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
 
-    const AIMessage = await getAIMessage(customerId, "Chào em");
+    const AIMessage = await getAIMessage(customerId, customerMessage);
     console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
@@ -71,6 +70,7 @@ async function getAIMessage(customerId, customerMessage) {
     const response = await axios.post(url, {"question": customerMessage, "thread_id": customerId}, {headers: {
       'Content-Type': 'application/json'
     }});
+    console.log(response);
     return response.answer;
   } catch (error) {
     console.error("Lỗi khi get AI Message:", error.message);
