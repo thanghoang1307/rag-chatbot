@@ -38,9 +38,11 @@ const handlerPostMethod = async (reqBody) => {
   try {
     const pageId = reqBody.entry[0].id;
     const customerMessage = reqBody.entry[0];
+    console.log(customerMessage);
     const customerId = reqBody.entry[0].messaging[0].sender.id;
 
-    const AIMessage = await getAIMessage(customerId, customerMessage);
+    const AIMessage = await getAIMessage(customerId, "Chào em");
+    console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
   } catch (error) {
@@ -67,10 +69,12 @@ async function sendMessage(pageId, recipientId, message) {
 async function getAIMessage(customerId, customerMessage) {
   try {
     const url = `http://ec2-18-136-101-157.ap-southeast-1.compute.amazonaws.com/chat`;
-    const response = await axios.post(url, null, {"question": customerMessage, "thread_id": customerId});
-    return response.data;
+    const response = await axios.post(url, {"question": customerMessage, "thread_id": customerId}, {headers: {
+      'Content-Type': 'application/json'
+    }});
+    return response.answer;
   } catch (error) {
-    console.error("Lỗi khi get Conversation:", error.message);
+    console.error("Lỗi khi get AI Message:", error.message);
     throw error;
   }
 }
