@@ -34,9 +34,6 @@ const handlerPostMethod = async (reqBody) => {
     const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
     let AIMessage = await getAIMessage(customerId, customerMessage);
-    console.log(AIMessage);
-    AIMessage = AIMessage.replace('\n', '<center></center>').replace('***','*');
-    console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
   } catch (error) {
@@ -51,9 +48,9 @@ async function sendMessage(pageId, recipientId, message) {
     // if(recipientId == '7899343366769040') {
     //   axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_on&access_token=${accessToken}`);
     // }
-    const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/v21.0/${pageId}/messages?access_token=${accessToken}`;
     console.log(url)
-    const response = await axios.post(url, null, {});
+    const response = await axios.post(url, {recipient: {id: recipientId}, message: {text: message}, messaging_type: 'RESPONSE'}, {});
     return response;
   } catch (error) {
     console.error("Lỗi khi send Message:", error.message);
