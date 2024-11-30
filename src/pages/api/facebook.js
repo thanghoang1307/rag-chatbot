@@ -34,7 +34,6 @@ const handlerPostMethod = async (reqBody) => {
     const pageId = reqBody.entry[0].id;
     const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
-    console.log(customerMessage);
     const AIMessage = await getAIMessage(customerId, customerMessage);
     console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
@@ -67,8 +66,8 @@ async function getAIMessage(customerId, customerMessage) {
       headers: {
       'Content-Type': 'application/json'
     }});
-    console.log(JSON.stringify(response));
-    return response.answer;
+    console.log(response);
+    return response;
   } catch (error) {
     console.error("Lỗi khi get AI Message:", error.message);
     throw error;
