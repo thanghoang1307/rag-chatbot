@@ -92,8 +92,7 @@ async function getConversation(pageId, customerId) {
     // }
     const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&limit=6&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
     const response = await axios.get(url, null, {});
-    console.log(JSON.stringify(response.data))
-    return response.data.data[0].messages.datas;
+    return response.data.data[0].messages.data;
   } catch (error) {
     console.error("Lỗi khi get Conversation:", error.message);
     throw error;
