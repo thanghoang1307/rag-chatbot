@@ -52,6 +52,7 @@ async function sendMessage(pageId, recipientId, message) {
     //   axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_on&access_token=${accessToken}`);
     // }
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&message={text:'${message}'}&messaging_type=RESPONSE&access_token=${accessToken}`;
+    console.log(url)
     const response = await axios.post(url, null, {});
     return response;
   } catch (error) {
