@@ -62,7 +62,7 @@ async function sendMessage(pageId, recipientId, message) {
 
 async function getAIMessage(customerId, customerMessage) {
   try {
-    const url = `http://ec2-18-136-101-157.ap-southeast-1.compute.amazonaws.com/chat`;
+    const url = `https://rag-langchain-59555d3f3589.herokuapp.com/chat`;
     const response = await axios.post(url, {"question": customerMessage, "thread_id": customerId}, {
       headers: {
       'Content-Type': 'application/json'
