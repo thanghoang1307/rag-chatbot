@@ -6,8 +6,8 @@ export default async function handler(req, res) {
       handlerGetMethod(req, res);
     } else {
       const reqBody = req.body;
+      console.log(reqBody);
       const processedData = await handlerPostMethod(reqBody);
-      console.log("All tasks completed");
       res.status(200).json({message: 'done'});
     }
   } catch (error) {
@@ -31,10 +31,22 @@ const handlerGetMethod = (req, res) => {
 const handlerPostMethod = async (reqBody) => {
   try {
     const pageId = reqBody.entry[0].id;
-    const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
+    const conversations = await getConversation(pageId, customerId);
     
-    let AIMessage = await getAIMessage(customerId, customerMessage);
+    let messages = conversations.map(msg => {
+      let role;
+      if (msg.from.id == customerId) {
+        role = 'user';
+      } else {
+        role = 'assistant';
+      }
+
+      const content = msg.message;
+      return {role, content};
+    }).reverse();
+
+    let AIMessage = await getAIMessage(customerId, messages);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
   } catch (error) {
@@ -50,7 +62,6 @@ async function sendMessage(pageId, recipientId, message) {
     //   axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${recipientId}}&sender_action=typing_on&access_token=${accessToken}`);
     // }
     const url = `https://graph.facebook.com/v21.0/${pageId}/messages?access_token=${accessToken}`;
-    console.log(url)
     const response = await axios.post(url, {recipient: {id: recipientId}, message: {text: message}, messaging_type: 'RESPONSE'}, {});
     return response;
   } catch (error) {
@@ -59,14 +70,13 @@ async function sendMessage(pageId, recipientId, message) {
   }
 }
 
-async function getAIMessage(customerId, customerMessage) {
+async function getAIMessage(customerId, messages) {
   try {
     const url = `https://rag-langchain-59555d3f3589.herokuapp.com/chat`;
-    const response = await axios.post(url, {"question": customerMessage, "thread_id": customerId}, {
+    const response = await axios.post(url, {"messages": messages, "thread_id": customerId}, {
       headers: {
       'Content-Type': 'application/json'
     }});
-    console.log(response.data.answer);
     return response.data.answer;
   } catch (error) {
     console.error("Lỗi khi get AI Message:", error.message);
