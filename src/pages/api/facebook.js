@@ -33,6 +33,7 @@ const handlerPostMethod = async (reqBody) => {
     const pageId = reqBody.entry[0].id;
     const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
+    
     let AIMessage = await getAIMessage(customerId, customerMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
@@ -69,6 +70,21 @@ async function getAIMessage(customerId, customerMessage) {
     return response.data.answer;
   } catch (error) {
     console.error("Lỗi khi get AI Message:", error.message);
+    throw error;
+  }
+}
+
+async function getConversation(pageId, customerId) {
+  try {
+    const accessToken = getPageAccessToken(pageId);
+    // if(customerId == '7899343366769040') {
+    //    axios.post(`https://graph.facebook.com/v21.0/${pageId}/messages?recipient={id:${customerId}}&sender_action=typing_on&access_token=${accessToken}`);
+    // }
+    const url = `https://graph.facebook.com/v21.0/${pageId}/conversations?platform=MESSENGER&limit=6&user_id=${customerId}&fields=participants,messages{message,from}&access_token=${accessToken}`;
+    const response = await axios.get(url, null, {});
+    return response.data.data[0].messages.datas;
+  } catch (error) {
+    console.error("Lỗi khi get Conversation:", error.message);
     throw error;
   }
 }
