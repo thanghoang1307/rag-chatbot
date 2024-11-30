@@ -47,6 +47,7 @@ const handlerPostMethod = async (reqBody) => {
     }).reverse();
 
     let AIMessage = await getAIMessage(customerId, messages);
+    console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
   } catch (error) {
