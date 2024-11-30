@@ -67,7 +67,7 @@ async function getAIMessage(customerId, customerMessage) {
       headers: {
       'Content-Type': 'application/json'
     }});
-    console.log(response);
+    console.log(JSON.stringify(response));
     return response.answer;
   } catch (error) {
     console.error("Lỗi khi get AI Message:", error.message);
