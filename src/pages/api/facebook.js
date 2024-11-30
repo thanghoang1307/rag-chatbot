@@ -6,7 +6,6 @@ export default async function handler(req, res) {
       handlerGetMethod(req, res);
     } else {
       const reqBody = req.body;
-      console.log(JSON.stringify(reqBody));
       const processedData = await handlerPostMethod(reqBody);
       console.log("All tasks completed");
       res.status(200).json({message: 'done'});
@@ -35,7 +34,8 @@ const handlerPostMethod = async (reqBody) => {
     const customerMessage = reqBody.entry[0].messaging[0].message.text;
     const customerId = reqBody.entry[0].messaging[0].sender.id;
     const AIMessage = await getAIMessage(customerId, customerMessage);
-    console.log(AIMessage);
+    console.log(customerId);
+    AIMessage.replace(/\n/g, '<center></center>');
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
   } catch (error) {
