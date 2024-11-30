@@ -35,7 +35,7 @@ const handlerPostMethod = async (reqBody) => {
     const customerId = reqBody.entry[0].messaging[0].sender.id;
     let AIMessage = await getAIMessage(customerId, customerMessage);
     console.log(AIMessage);
-    AIMessage = AIMessage.replace(/\n\n/g, '\r\n\r\n').replace('**','*');
+    AIMessage = AIMessage.replace(/\n\n/g, '\n').replace('**','*');
     console.log(AIMessage);
     const data = await sendMessage(pageId, customerId, AIMessage);
     return {success: true, message: 'ok'};
